@@ -1,6 +1,3 @@
-#To record mouse events
-
-
 from pynput.mouse import Listener
 import time
 
@@ -13,40 +10,37 @@ mouse_events = {
 	'scrolls':0
 }
 
-#To record moves
+data = open("Mouse_Events.txt", 'w+')
+
+#Function defined to record the number of mouse drags
 def on_move(x, y):
 	global flag_move
 	flag_move = 1
 	global flag_scroll
 	if flag_scroll == 1:
-		data = open("Mouse_Events.txt", 'a+')
 		mouse_events['moves'] = mouse_events['moves'] + 1
 		mouse_events['scrolls'] = mouse_events['scrolls'] + 1
-		data.write("\nMoves - %d" %mouse_events['moves'])
-		data.write("\nscrolls - %d" %mouse_events['scrolls'])
-		data.close()
 		flag_scroll = 0
+		time.sleep(1)
+		data.write('\nclicks - %d' %mouse_events['clicks'] + '\tmoves - %d' %mouse_events['moves'] + '\tscrolls - %d' %mouse_events['scrolls'])
+		data.read()
 
-#To record clicks		
+#Function defined to record the number of mouse clicks
 def on_click(x, y, button, pressed):
 	global flag_move
 	if flag_move == 1 and pressed == 1:
-		data = open("Mouse_Events.txt", 'a+')
 		mouse_events['clicks'] = mouse_events['clicks'] + 1
 		mouse_events['moves'] = mouse_events['moves'] + 1
-		data.write("\nMoves - %d" %mouse_events['moves'])
-		data.write("\nclicks - %d" %mouse_events['clicks'])
-		data.close()
 		flag_move = 0
-		
-	elif pressed == 1:
-		data = open("Mouse_Events.txt", 'a+')
-		mouse_events['clicks'] = mouse_events['clicks'] + 1
-		data.write("\nclicks - %d" %mouse_events['clicks'])
-		data.close()
 		time.sleep(1)
-		
-#To record scrolls
+		data.write('\nclicks - %d' %mouse_events['clicks'] + '\tmoves - %d' %mouse_events['moves'] + '\tscrolls - %d' %mouse_events['scrolls'])
+		data.read()
+	elif pressed == 1:
+		mouse_events['clicks'] = mouse_events['clicks'] + 1
+		time.sleep(1)
+		data.write('\nclicks - %d' %mouse_events['clicks'] + '\tmoves - %d' %mouse_events['moves'] + '\tscrolls - %d' %mouse_events['scrolls'])
+		data.read()
+#Function defined to record the number of mouse scrolls
 def on_scroll(x, y, dx, dy):
 	global flag_scroll
 	flag_scroll = 1
